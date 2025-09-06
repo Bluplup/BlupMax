@@ -106,6 +106,16 @@ async def unmute(ctx, member: discord.Member = None):
     else:
         await ctx.send(f"{member.mention} mute'lu değil.")
 
+# Sil
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def sil(ctx, miktar: int):
+    # 1 mesaj hariç silmemek için miktarı 1 eksiltiyoruz
+    miktar += 1
+    deleted = await ctx.channel.purge(limit=miktar)
+    await ctx.send(f"{len(deleted)-1} mesaj silindi.", delete_after=5)
+
+
 # ================== Rol komutları ==================
 
 # Rol Verme
@@ -149,6 +159,14 @@ def run():
 
 t = Thread(target=run)
 t.start()
+
+@bot.event
+async def on_ready():
+    print(f"{bot.user} olarak giriş yapıldı!")
+    channel = bot.get_channel(1412669935947354134)  # Buraya test kanalı ID'sini yaz
+    if channel:
+        await channel.send("Bot Render üzerinde aktif oldu! ✅")
+
 
 # Botu çalıştır
 bot.run(DISCORD_TOKEN)
